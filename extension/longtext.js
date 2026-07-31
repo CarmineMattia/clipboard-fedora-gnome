@@ -56,17 +56,13 @@ export function saveTextFile(text) {
  * @param {string} path
  */
 export function openTextFile(path) {
-    if (!isSpillPath(path)) {
-        console.error('[Clip Lite] refused to open path outside spill dir:', path);
+    if (!isSpillPath(path))
         return;
-    }
 
     const file = Gio.File.new_for_path(path);
     const uri = file.get_uri();
-    if (!uri.startsWith('file:')) {
-        console.error('[Clip Lite] refused non-file URI');
+    if (!uri.startsWith('file:'))
         return;
-    }
 
     const editors = ['org.gnome.TextEditor.desktop', 'gnome-text-editor.desktop'];
     for (const desktop of editors) {
@@ -84,29 +80,40 @@ export function openTextFile(path) {
     try {
         Gio.AppInfo.launch_default_for_uri(uri, null);
         return;
-    } catch (error) {
-        console.error('[Clip Lite] launch_default_for_uri failed:', error);
+    } catch (_e) {
+        // fall through
     }
 
     // argv form only — never shell-interpolate the path
     try {
         Gio.Subprocess.new(['xdg-open', path], Gio.SubprocessFlags.NONE);
-    } catch (error) {
-        console.error('[Clip Lite] xdg-open failed:', error);
+    } catch (_e) {
+        // ignore
     }
 }
 
 /**
- * Read entire UTF-8 text file (spill dir only).
+ * Read entire UTF-8 text file asynchronously (spill dir only).
  * @param {string} path
- * @returns {string}
+ * @returns {Promise<string>}
  */
 export function readTextFile(path) {
-    if (!isSpillPath(path))
-        throw new Error('Clip Lite: read refused (path outside spill dir)');
-    const file = Gio.File.new_for_path(path);
-    const [, contents] = file.load_contents(null);
-    return new TextDecoder('utf-8', {fatal: false}).decode(contents);
+    return new Promise((resolve, reject) => {
+        if (!isSpillPath(path)) {
+            reject(new Error('Clip Lite: read refused (path outside spill dir)'));
+            return;
+        }
+
+        const file = Gio.File.new_for_path(path);
+        file.load_contents_async(null, (_f, res) => {
+            try {
+                const [, contents] = file.load_contents_finish(res);
+                resolve(new TextDecoder('utf-8', {fatal: false}).decode(contents));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
 }
 
 /**
@@ -125,8 +132,7 @@ export function clearSpillFiles() {
             Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
             null
         );
-    } catch (error) {
-        console.error('[Clip Lite] clearSpillFiles list failed:', error);
+    } catch (_e) {
         return 0;
     }
 
@@ -141,8 +147,8 @@ export function clearSpillFiles() {
             const child = dir.get_child(name);
             child.delete(null);
             removed++;
-        } catch (error) {
-            console.error('[Clip Lite] failed to delete', name, error);
+        } catch (_e) {
+            // skip undeletable file
         }
     }
     enumerator.close(null);

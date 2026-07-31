@@ -16,14 +16,14 @@ export function askPasteIntoTxt(opts) {
     const dialog = new LongTextDialog(title, body, () => {
         try {
             opts.onYes?.();
-        } catch (error) {
-            console.error('[Clip Lite] onYes failed:', error);
+        } catch (_e) {
+            // ignore
         }
     }, () => {
         try {
             opts.onNo?.();
-        } catch (error) {
-            console.error('[Clip Lite] onNo failed:', error);
+        } catch (_e) {
+            // ignore
         }
     });
     dialog.open();

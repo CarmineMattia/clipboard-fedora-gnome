@@ -32,6 +32,7 @@ export default class ClipLiteExtension extends Extension {
             this._buttonPressId = 0;
             this._dialogOpen = false;
             this._pasteTimeoutId = 0;
+            this._pasteKeyTimeoutId = 0;
             this._previousWindow = null;
             this._virtualKeyboard = null;
             this._settings = this.getSettings();
@@ -69,7 +70,6 @@ export default class ClipLiteExtension extends Extension {
 
             this._bindShortcut();
         } catch (error) {
-            console.error('[Clip Lite] enable failed:', error);
             this.disable();
             throw error;
         }
@@ -81,6 +81,10 @@ export default class ClipLiteExtension extends Extension {
         if (this._pasteTimeoutId) {
             GLib.source_remove(this._pasteTimeoutId);
             this._pasteTimeoutId = 0;
+        }
+        if (this._pasteKeyTimeoutId) {
+            GLib.source_remove(this._pasteKeyTimeoutId);
+            this._pasteKeyTimeoutId = 0;
         }
 
         this._monitor?.stop();
@@ -96,12 +100,16 @@ export default class ClipLiteExtension extends Extension {
             this._menuOpenId = 0;
         }
 
+        this._historySection?.destroy();
+        this._historySection = null;
+        this._privateItem?.destroy();
+        this._privateItem = null;
+        this._clearItem?.destroy();
+        this._clearItem = null;
+
         this._indicator?.destroy();
         this._indicator = null;
         this._history = null;
-        this._historySection = null;
-        this._privateItem = null;
-        this._clearItem = null;
         this._dialogOpen = false;
         this._settings = null;
         this._previousWindow = null;
@@ -150,8 +158,8 @@ export default class ClipLiteExtension extends Extension {
      * Put entry on clipboard, then paste into the app that was focused
      * (Enter or click — like Windows Win+V).
      */
-    _selectAndPaste(entry) {
-        this._monitor.restore(entry);
+    async _selectAndPaste(entry) {
+        await this._monitor.restore(entry);
         this._history.add(entry);
         this._indicator.menu.close();
 
@@ -169,8 +177,8 @@ export default class ClipLiteExtension extends Extension {
         try {
             if (this._previousWindow)
                 this._previousWindow.activate(global.get_current_time());
-        } catch (error) {
-            console.error('[Clip Lite] activate window failed:', error);
+        } catch (_e) {
+            // ignore
         }
 
         if (!this._virtualKeyboard) {
@@ -179,13 +187,16 @@ export default class ClipLiteExtension extends Extension {
                 this._virtualKeyboard = seat.create_virtual_device(
                     Clutter.InputDeviceType.KEYBOARD_DEVICE
                 );
-            } catch (error) {
-                console.error('[Clip Lite] virtual keyboard failed:', error);
+            } catch (_e) {
                 return;
             }
         }
 
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 40, () => {
+        if (this._pasteKeyTimeoutId)
+            GLib.source_remove(this._pasteKeyTimeoutId);
+
+        this._pasteKeyTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 40, () => {
+            this._pasteKeyTimeoutId = 0;
             this._sendPasteHotkey();
             return GLib.SOURCE_REMOVE;
         });
@@ -221,8 +232,8 @@ export default class ClipLiteExtension extends Extension {
                 kb.notify_keyval(now, Clutter.KEY_v, Clutter.KeyState.RELEASED);
                 kb.notify_keyval(now, Clutter.KEY_Control_L, Clutter.KeyState.RELEASED);
             }
-        } catch (error) {
-            console.error('[Clip Lite] paste hotkey failed:', error);
+        } catch (_e) {
+            // ignore
         }
     }
 
@@ -244,8 +255,8 @@ export default class ClipLiteExtension extends Extension {
             this._history.clear();
             try {
                 clearSpillFiles();
-            } catch (error) {
-                console.error('[Clip Lite] clearSpillFiles failed:', error);
+            } catch (_e) {
+                // ignore
             }
             if (this._indicator.menu.isOpen)
                 this._rebuildHistoryItems();

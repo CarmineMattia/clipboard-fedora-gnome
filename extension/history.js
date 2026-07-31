@@ -55,14 +55,13 @@ export class ClipEntry {
     }
 
     /** Full text for restore (from memory or file). Spill paths are validated. */
-    getFullText() {
+    async getFullText() {
         if (!this.isText())
             return '';
         if (this.filePath) {
             try {
-                return readTextFile(this.filePath);
-            } catch (error) {
-                console.error('[Clip Lite] read spill file failed:', error);
+                return await readTextFile(this.filePath);
+            } catch (_e) {
                 return '';
             }
         }

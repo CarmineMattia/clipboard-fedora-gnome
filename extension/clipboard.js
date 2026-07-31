@@ -107,12 +107,12 @@ export class ClipboardMonitor {
     }
 
     /** Restore FULL content to the system clipboard (never a truncated preview). */
-    restore(entry) {
+    async restore(entry) {
         this._suppressUntil = GLib.get_monotonic_time() + 800 * 1000;
         this._lastKey = this._entryKey(entry);
 
         if (entry.isText()) {
-            const full = entry.getFullText();
+            const full = await entry.getFullText();
             this._clipboard.set_text(CLIPBOARD, full || '');
             return;
         }
@@ -123,8 +123,8 @@ export class ClipboardMonitor {
                     ? this._byteArray.toGBytes(entry.data)
                     : GLib.Bytes.new(entry.data);
                 this._clipboard.set_content(CLIPBOARD, entry.mime, bytes);
-            } catch (error) {
-                console.error('[Clip Lite] restore image failed:', error);
+            } catch (_e) {
+                // ignore restore failures
             }
         }
     }
@@ -183,8 +183,7 @@ export class ClipboardMonitor {
             entry = reason === 'poll'
                 ? await this._readTextOnly()
                 : await this._readFull();
-        } catch (error) {
-            console.error('[Clip Lite] read failed:', error);
+        } catch (_e) {
             this._busy = false;
             return;
         }
@@ -215,8 +214,8 @@ export class ClipboardMonitor {
         this._lastKey = key;
         try {
             this._onEntry?.(entry);
-        } catch (error) {
-            console.error('[Clip Lite] onEntry failed:', error);
+        } catch (_e) {
+            // ignore handler errors
         }
     }
 
@@ -237,8 +236,7 @@ export class ClipboardMonitor {
             return null;
         // Only refuse absurd sizes (Shell OOM protection). Do not silently shorten paste.
         if (text.length > HARD_MAX_TEXT_CHARS) {
-            console.warn(`[Clip Lite] text exceeds ${HARD_MAX_TEXT_CHARS} chars; refusing in-memory keep`);
-            // Still return truncated ONLY as last-resort crash guard — extension will spill to file.
+            // Truncate only as last-resort OOM guard — extension will spill to file.
             text = text.slice(0, HARD_MAX_TEXT_CHARS);
         }
         return new ClipEntry({
@@ -433,13 +431,11 @@ export class ClipboardMonitor {
                     }
                     try {
                         finish(this._byteArray.fromGBytes(bytes));
-                    } catch (error) {
-                        console.error(`[Clip Lite] fromGBytes(${mime}):`, error);
+                    } catch (_e) {
                         finish(null);
                     }
                 });
-            } catch (error) {
-                console.error(`[Clip Lite] get_content(${mime}):`, error);
+            } catch (_e) {
                 finish(null);
             }
         });
@@ -466,8 +462,7 @@ export class ClipboardMonitor {
                 this._clipboard.get_text(CLIPBOARD, (_clipboard, text) => {
                     finish(text || '');
                 });
-            } catch (error) {
-                console.error('[Clip Lite] get_text:', error);
+            } catch (_e) {
                 finish('');
             }
         });
