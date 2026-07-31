@@ -6,6 +6,5 @@
 # Schemas build artifact is committed for easy install; rebuild with install.sh
 # Keep gschemas.compiled for clone-and-run convenience.
 
-# Local spill / secrets must never be in git
-clip-lite/
-*.txt.bak
+# Built extension packs (create with gnome-extensions pack)
+*.shell-extension.zip

@@ -19,18 +19,18 @@ fi
 
 glib-compile-schemas "${EXT}/schemas"
 mkdir -p "$(dirname "${TARGET}")"
-
 ln -sfn "${EXT}" "${TARGET}"
 
-# Clean older install folder name if present (same project, previous id)
+# Clean older install folder name if present
 rm -f "${HOME}/.local/share/gnome-shell/extensions/clipboard-history@"* 2>/dev/null || true
 
 echo "Done. Clip Lite is installed."
 echo
-echo "IMPORTANT on Wayland:"
-echo "  Log out and log in FIRST."
-echo "  Only then run:  gnome-extensions enable ${UUID}"
-echo "  Then press Super+V"
+echo "Next:"
+echo "  1. Log out and log in"
+echo "  2. gnome-extensions enable ${UUID}"
+echo "  3. Set a hotkey (example Super+V):"
+echo "     gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu \"['<Super>v']\""
 echo
-echo "If Super+V opens notifications:"
+echo "If Super+V opens notifications, run this first:"
 echo "  gsettings set org.gnome.shell.keybindings toggle-message-tray \"['<Super>n']\""

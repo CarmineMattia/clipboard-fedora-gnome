@@ -1,9 +1,9 @@
 {
     "uuid": "clip-lite@local",
     "name": "Clip Lite",
-    "description": "Simple low-memory clipboard history for GNOME. Super+V opens the list. Text and small images.",
+    "description": "Never lose a copy again. Clip Lite watches your clipboard (text & small images) and lets you paste from a short history. Set your own hotkey — try Super+V.",
     "shell-version": ["45", "46", "47", "48", "49", "50"],
     "url": "https://github.com/CarmineMattia/clipboard-fedora-gnome",
     "settings-schema": "org.gnome.shell.extensions.clipboard-history",
-    "version": 15
+    "version": 16
 }

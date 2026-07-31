@@ -1,51 +1,52 @@
 # Clip Lite
 
-## What is this?
+**Never lose a copy again.**
 
-**Clip Lite** remembers things you copy.
+Your computer normally keeps only the **last** thing you copied.  
+Clip Lite keeps a **short list** of recent copies (words and small pictures).
 
-On a normal computer, copy only keeps the **last** thing.  
-If you copy something new, the old one is gone.
-
-Clip Lite keeps a **short list** of recent copies  
-(text and small pictures).  
-You can pick an older one and paste it again.
-
-It is made for the **GNOME** desktop on Linux  
-(for example Fedora).
-
-It tries to use **very little memory**.
+Made for **GNOME** on Linux (like Fedora).  
+Uses **little memory**. Reads your **clipboard** on your PC only — nothing goes online.
 
 ---
 
 ## How to use it
 
-1. Copy something with **Ctrl+C** (like always).
-2. Press **Super+V**  
-   (`Super` is often the key with the Windows logo).
-3. Use the **arrow keys** (or click) to pick an item.
-4. Press **Enter** (or click) — it pastes into the app you were using.
+1. Copy with **Ctrl+C**.
+2. Open the list (see hotkey below).
+3. Pick an item with arrows or the mouse.
+4. Press **Enter** — it pastes into the app you were using.
 
-That is it.
+### Set the hotkey (needed once)
+
+There is **no** hotkey until you set one.  
+**Super+V** is a good choice (`Super` = Windows-logo key).
+
+**Easy way — run this in a terminal:**
+
+```bash
+gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu "['<Super>v']"
+```
+
+If Super+V opens notifications instead, free it first:
+
+```bash
+gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>n']"
+gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu "['<Super>v']"
+```
+
+You can also click the **paste icon** in the top bar to open the list.
 
 ---
 
-## Extra buttons in the menu
+## Menu extras
 
-| Button | What it does |
-|--------|----------------|
-| **Private mode** | Stop saving copies for a while. |
-| **Clear history** | Forget the list and delete saved long text files. |
-
-If you copy a **very long** text, Clip Lite may ask:  
-**“Paste into txt?”**  
-You can save it as a file and open it in a text editor.
+- **Private mode** — stop saving copies for a while  
+- **Clear history** — erase the list  
 
 ---
 
-## Install (for anyone)
-
-You need GNOME on your computer.
+## Install
 
 ```bash
 git clone https://github.com/CarmineMattia/clipboard-fedora-gnome.git
@@ -54,39 +55,17 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Then:
-
-1. **Log out and log back in** (required on Wayland — do this before enable).
-2. Run:
-
-```bash
-gnome-extensions enable clip-lite@local
-```
-
-3. Press **Super+V**.
-
-If you see `Extension “clip-lite@local” does not exist`, you skipped step 1 — log out/in, then enable again.
-
-### If Super+V opens notifications instead
-
-```bash
-gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>n']"
-```
-
-### Remove it
-
-```bash
-gnome-extensions disable clip-lite@local
-rm -f ~/.local/share/gnome-shell/extensions/clip-lite@local
-```
+1. Log out and log in.  
+2. `gnome-extensions enable clip-lite@local`  
+3. Set the hotkey (command above).  
+4. Copy something, press your hotkey, press Enter.
 
 ---
 
 ## Simple facts
 
-- Works on your computer only — **nothing is sent online**.
-- Keeps about **12** recent items.
-- Pictures bigger than about **half a megabyte** are skipped (to save memory).
-- Free to use — see [LICENSE](./LICENSE).
+- About **12** items max (oldest drop off)  
+- Big pictures are skipped to save memory  
+- Free — [MIT license](./LICENSE)
 
-More detail for adults / developers: [SECURITY.md](./SECURITY.md) · [RAM.md](./RAM.md)
+More: [SECURITY.md](./SECURITY.md) · [RAM.md](./RAM.md)

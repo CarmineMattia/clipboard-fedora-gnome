@@ -2,9 +2,9 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.clipboard-history" path="/org/gnome/shell/extensions/clipboard-history/">
     <key name="toggle-menu" type="as">
-      <default><![CDATA[['<Super>v']]]></default>
+      <default>[]</default>
       <summary>Toggle clipboard history</summary>
-      <description>Keyboard shortcut to open or close the Clip Lite history menu (default Super+V).</description>
+      <description>Keyboard shortcut to open or close the clipboard history menu. Empty by default — set it yourself (for example Super+V).</description>
     </key>
   </schema>
 </schemalist>
