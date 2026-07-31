@@ -1,0 +1,11 @@
+# OS / editor
+*~
+*.swp
+.DS_Store
+
+# Schemas build artifact is committed for easy install; rebuild with install.sh
+# Keep gschemas.compiled for clone-and-run convenience.
+
+# Local spill / secrets must never be in git
+clip-lite/
+*.txt.bak

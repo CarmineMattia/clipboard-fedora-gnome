@@ -1,0 +1,9 @@
+{
+    "uuid": "clip-lite@local",
+    "name": "Clip Lite",
+    "description": "Simple low-memory clipboard history for GNOME. Super+V opens the list. Text and small images.",
+    "shell-version": ["45", "46", "47", "48", "49", "50"],
+    "url": "https://github.com/CarmineMattia/clipboard-fedora-gnome",
+    "settings-schema": "org.gnome.shell.extensions.clipboard-history",
+    "version": 15
+}
