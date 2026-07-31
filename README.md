@@ -1,41 +1,44 @@
 # Clip Lite
 
-**Never lose a copy again.**
+**Lightweight clipboard history** for GNOME (Fedora and friends).
 
-Your computer normally keeps only the **last** thing you copied.  
-Clip Lite keeps a **short list** of recent copies (words and small pictures).
+Your PC normally keeps only the **last** copy.  
+Clip Lite keeps a **short list** (text & images) so you can paste an older one.
 
-Made for **GNOME** on Linux (like Fedora).  
-Uses **little memory**. Reads your **clipboard** on your PC only — nothing goes online.
+It uses **little memory**. It only reads your clipboard on your computer — nothing goes online.
 
 ---
 
 ## How to use it
 
 1. Copy with **Ctrl+C**.
-2. Open the list (see hotkey below).
-3. Pick an item with arrows or the mouse.
+2. Open the list with your hotkey (or click the paste icon up top).
+3. Pick an item (arrows or mouse).
 4. Press **Enter** — it pastes into the app you were using.
 
-### Set the hotkey (needed once)
+### Set the hotkey (once)
 
-There is **no** hotkey until you set one.  
-**Super+V** is a good choice (`Super` = Windows-logo key).
+There is **no** hotkey until you set one. **Super+V** is a good choice  
+(`Super` = key with the Windows logo).
 
-**Easy way — run this in a terminal:**
+**Simplest command:**
 
 ```bash
-gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu "['<Super>v']"
+dconf write /org/gnome/shell/extensions/clipboard-history/toggle-menu "['<Super>v']"
 ```
 
-If Super+V opens notifications instead, free it first:
+If Super+V opens notifications, free it first:
 
 ```bash
 gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>n']"
-gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu "['<Super>v']"
+dconf write /org/gnome/shell/extensions/clipboard-history/toggle-menu "['<Super>v']"
 ```
 
-You can also click the **paste icon** in the top bar to open the list.
+After a full `./install.sh`, this also works:
+
+```bash
+gsettings set org.gnome.shell.extensions.clipboard-history toggle-menu "['<Super>v']"
+```
 
 ---
 
@@ -58,14 +61,14 @@ chmod +x install.sh
 1. Log out and log in.  
 2. `gnome-extensions enable clip-lite@local`  
 3. Set the hotkey (command above).  
-4. Copy something, press your hotkey, press Enter.
+4. Copy something → hotkey → Enter.
 
 ---
 
 ## Simple facts
 
 - About **12** items max (oldest drop off)  
-- Big pictures are skipped to save memory  
+- Very big pictures are skipped to save memory  
 - Free — [MIT license](./LICENSE)
 
 More: [SECURITY.md](./SECURITY.md) · [RAM.md](./RAM.md)
