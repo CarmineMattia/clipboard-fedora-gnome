@@ -35,11 +35,11 @@ ps -o pid,rss,pcpu,comm -C gnome-shell
 # note the number
 ps -o rss= -C gnome-shell
 
-gnome-extensions disable clip-lite@local
+gnome-extensions disable clip-lite@carminemattia.github.io
 sleep 2
 ps -o rss= -C gnome-shell
 
-gnome-extensions enable clip-lite@local
+gnome-extensions enable clip-lite@carminemattia.github.io
 sleep 2
 ps -o rss= -C gnome-shell
 ```
@@ -63,13 +63,13 @@ Open **System Monitor** → search **gnome-shell** → Memory / CPU.
 
 ## Always on at boot?
 
-If `gnome-extensions info clip-lite@local` shows **Enabled: Yes**,  
+If `gnome-extensions info clip-lite@carminemattia.github.io` shows **Enabled: Yes**,  
 Fedora/GNOME will load it again after restart.
 
 Check after reboot:
 
 ```bash
-gnome-extensions info clip-lite@local
+gnome-extensions info clip-lite@carminemattia.github.io
 ```
 
 You want: `Enabled: Yes` and `State: ACTIVE`.

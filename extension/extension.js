@@ -68,7 +68,6 @@ export default class ClipLiteExtension extends Extension {
             this._monitor.start();
 
             this._bindShortcut();
-            console.log('[Clip Lite] enabled (Enter / click pastes)');
         } catch (error) {
             console.error('[Clip Lite] enable failed:', error);
             this.disable();

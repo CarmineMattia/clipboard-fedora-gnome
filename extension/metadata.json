@@ -1,9 +1,8 @@
 {
-    "uuid": "clip-lite@local",
+    "uuid": "clip-lite@carminemattia.github.io",
     "name": "Clip Lite",
-    "description": "Lightweight clipboard history for text & images + set your hotkey (Super+V)",
+    "description": "Lightweight clipboard history for text and images.\n\nThis extension reads your clipboard on this computer only — nothing is uploaded.\n\nNo hotkey is set by default; set your own (for example Super+V).",
     "shell-version": ["45", "46", "47", "48", "49", "50"],
     "url": "https://github.com/CarmineMattia/clipboard-fedora-gnome",
-    "settings-schema": "org.gnome.shell.extensions.clipboard-history",
-    "version": 16
+    "settings-schema": "org.gnome.shell.extensions.clipboard-history"
 }

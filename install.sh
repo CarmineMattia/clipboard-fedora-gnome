@@ -2,7 +2,7 @@
 # Install Clip Lite for your user (no admin password needed).
 set -euo pipefail
 
-UUID="clip-lite@local"
+UUID="clip-lite@carminemattia.github.io"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 EXT="${ROOT}/extension"
 TARGET="${HOME}/.local/share/gnome-shell/extensions/${UUID}"
@@ -27,8 +27,9 @@ mkdir -p "${USER_SCHEMAS}"
 cp -f "${EXT}/schemas/org.gnome.shell.extensions.clipboard-history.gschema.xml" "${USER_SCHEMAS}/"
 glib-compile-schemas "${USER_SCHEMAS}"
 
-# Clean older install folder name if present
+# Clean older install folder names if present
 rm -f "${HOME}/.local/share/gnome-shell/extensions/clipboard-history@"* 2>/dev/null || true
+rm -f "${HOME}/.local/share/gnome-shell/extensions/clip-lite@local" 2>/dev/null || true
 
 echo "Done. Clip Lite is installed."
 echo

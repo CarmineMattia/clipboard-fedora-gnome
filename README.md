@@ -59,7 +59,7 @@ chmod +x install.sh
 ```
 
 1. Log out and log in.  
-2. `gnome-extensions enable clip-lite@local`  
+2. `gnome-extensions enable clip-lite@carminemattia.github.io`  
 3. Set the hotkey (command above).  
 4. Copy something → hotkey → Enter.
 
